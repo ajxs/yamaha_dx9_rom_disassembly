@@ -3439,7 +3439,7 @@ handler_sci:                                    SUBROUTINE
     LDX     <midi_buffer_ptr_rx_write
     STAA    0,x
     INX
-    CPX     #midi_buffer_sysex_tx_single
+    CPX     #midi_buffer_rx_end
     BNE     .is_rx_buffer_full
 
 ; Reset the RX data ring buffer if it has reached the end.
