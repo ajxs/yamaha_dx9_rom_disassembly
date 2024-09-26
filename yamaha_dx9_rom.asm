@@ -543,7 +543,7 @@ analog_input_slider_previous:                   EQU $15F8
 patch_current_modified_flag:                    EQU $15F9
 patch_compare_mode_active:                      EQU $15FA
 
-; This flag appears to disable 'Key Tranpose' UI functionality.
+; This flag appears to disable 'Key Transpose' UI functionality.
 ui_flag_blocks_key_transpose:                   EQU $15FB
 lfo_waveform:                                   EQU $15FC
 lfo_pitch_mod_sensitivity:                      EQU $15FD
@@ -884,7 +884,7 @@ keyboard_note_on_handler:                       SUBROUTINE
 ; Mask the note number.
     ANDB    #%1111111
 
-; Test whether the 'Set Key Tranpose' mode is active.
+; Test whether the 'Set Key Transpose' mode is active.
 ; In this case the next keypress sets the root note.
     LDAA    <key_transpose_set_mode_active
     BEQ     .send_midi_message_and_add_new_note
@@ -13797,7 +13797,7 @@ table_sysex_voice_param_translation_above_127:
 
 
 ; =============================================================================
-; MIDI_SYSEX_RX_PARAM_SET_ALG_KEY_TRANPOSE
+; MIDI_SYSEX_RX_PARAM_SET_ALG_KEY_TRANSPOSE
 ; =============================================================================
 ; LOCATION: 0xF56F
 ;
@@ -13858,12 +13858,12 @@ midi_sysex_rx_param_set_alg_key_transpose:      SUBROUTINE
     CPX     #patch_edit_key_transpose
     BNE     .exit_incoming_parameter_is_valid
 
-; Exit with the carry flag set in error if the 'Key Tranpose' value is
+; Exit with the carry flag set in error if the 'Key Transpose' value is
 ; less than '12'.
     SUBA    #12
     BCS     .exit_incoming_parameter_is_invalid
 
-; Exit with the carry flag set in error if the 'Key Tranpose' value is
+; Exit with the carry flag set in error if the 'Key Transpose' value is
 ; above '24'.
 ; Otherwise clear the carry flag, and exit.
     CMPA    #24
