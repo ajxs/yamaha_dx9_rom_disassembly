@@ -292,7 +292,7 @@ copy_counter:                                   EQU $8F
 
 ; When this flag is set the next keypress event will be used to set the
 ; synth's key transpose.
-key_tranpose_set_mode_active:                   EQU $90
+key_transpose_set_mode_active:                   EQU $90
 note_transpose_frequency_base:                  EQU $91
 pedal_status_previous:                          EQU $93
 keyboard_last_scanned_values:                   EQU $95
@@ -647,7 +647,7 @@ handler_reset:                                  SUBROUTINE
     JSR     voice_reset_frequency_data
 
 ; Store 0xFF in the note number variable to indicate a 'NULL' value.
-; This will be intepreted as a no-operation by the note handler in the main
+; This will be interpreted as a no-operation by the note handler in the main
 ; event loop.
     LDAA    #$FF
     STAA    <note_number
@@ -703,7 +703,7 @@ handler_reset:                                  SUBROUTINE
 ;
 ; DESCRIPTION:
 ; Synth firmware executive main loop.
-; This is where the bulk of the synth's functionaly is implemented.
+; This is where the bulk of the synth's functionality is implemented.
 ; The keyboard, and pedal input are first scanned here. Unlike other Yamaha
 ; FM synthesisers, the 'Note On', and 'Note Off' functionaliy is implemented
 ; via a flag set in the keyboard scan routine. This flag records whether a
@@ -768,7 +768,7 @@ main_update_keyboard_and_pedal_input:           SUBROUTINE
 
 keyboard_scan:
 ; The keyboard circuitry is grouped by key, with the same key from each octave
-; wired together. The individual keys of an octive are wired to lines 4-15 of
+; wired together. The individual keys of an octave are wired to lines 4-15 of
 ; the key switch scan driver. The value returned is the octave of the pressed
 ; key (1 << octave).
 ; This subroutine iterates over the 12 different keys, checking whether each
@@ -886,15 +886,15 @@ keyboard_note_on_handler:                       SUBROUTINE
 
 ; Test whether the 'Set Key Tranpose' mode is active.
 ; In this case the next keypress sets the root note.
-    LDAA    <key_tranpose_set_mode_active
+    LDAA    <key_transpose_set_mode_active
     BEQ     .send_midi_message_and_add_new_note
 
 ; Test whether the note is below 48.
-; If so, set to 48 to initialise the tranpose key at the minimum.
+; If so, set to 48 to initialise the transpose key at the minimum.
     CMPB    #48
     BMI     .key_under_48
 
-; Clamp the base tranpose key at 72.
+; Clamp the base transpose key at 72.
     CMPB    #72
     BLS     .set_transpose_key
 
@@ -921,7 +921,7 @@ keyboard_note_on_handler:                       SUBROUTINE
     JSR     ui_print_update_led_and_menu
 
 .clear_key_transpose_flag:
-    CLR     key_tranpose_set_mode_active
+    CLR     key_transpose_set_mode_active
 
 .no_action_needed:
     JMP     voice_add_exit
@@ -1241,7 +1241,7 @@ voice_add_mono:                                 SUBROUTINE
     SUBD    0,x     ; IX = Voice Status.
 
 ; If the new note being added is higher than the previous active note, set
-; the portamento directon to '1'.
+; the portamento direction to '1'.
     BCC     .new_note_higher
 
     CLR     portamento_direction
@@ -1477,7 +1477,7 @@ voice_remove_mono_exit:
 ; RETURNS:
 ; * IX: A pointer to the index of the voice status entry matching the
 ;    specified frequency.
-;    The carry flag is set to indicate the failur condition of not being
+;    The carry flag is set to indicate the failure condition of not being
 ;    able to find the matching voice.
 ;
 ; =============================================================================
@@ -1678,7 +1678,7 @@ main_input_handler_process_button:              SUBROUTINE
 
 ; If any key other than the data input slider, or 'Yes/No' are pressed
 ; clear the key transpose mode flag.
-    CLR     key_tranpose_set_mode_active
+    CLR     key_transpose_set_mode_active
     CLR     ui_flag_blocks_key_transpose
 ; Falls-through below.
 
@@ -1727,7 +1727,7 @@ main_input_handler_dispatch:                    SUBROUTINE
 input_slider:                                   SUBROUTINE
     ANDA    #%1100
 
-; Check if the current UI sate is function/edit/play?
+; Check if the current UI state is function/edit/play?
 ; If not, exit.
 ; @TODO: Verify this.
     BNE     main_input_handler_exit
@@ -1755,7 +1755,7 @@ input_slider:                                   SUBROUTINE
 ;
 ; =============================================================================
 input_button_yes_no:                            SUBROUTINE
-; Check if the current UI sate is in 'Store' mode. If so, exit.
+; Check if the current UI state is in 'Store' mode. If so, exit.
     ANDA    #%1100
     BNE     main_input_handler_exit
 
@@ -2494,7 +2494,7 @@ midi_rx_cc_5_portamento_time:                   SUBROUTINE
 ; DESCRIPTION:
 ; Handles a MIDI Control Code event of type '6'.
 ; This is intended to be a 'Data Entry' event.
-; The TX7 Service manual suggests that this CC event is intended to udpate the
+; The TX7 Service manual suggests that this CC event is intended to update the
 ; currently selected "voice or function parameter", however the code appears
 ; to only actually work in function mode, and only work when the last pressed
 ; button was 'Button 1' in 'Function Mode', i.e. The master tune setting.
@@ -4429,7 +4429,7 @@ patch_activate_operator_eg_level:               SUBROUTINE
 
 ; The operator level is stored on the EGS as a 6-bit value, with lower values
 ; increasing in volume.
-; Addding 0xC0/192/0b11000000 sets the two highest bits. When this value is '
+; Adding 0xC0/192/0b11000000 sets the two highest bits. When this value is '
 ; inverted, the top two bits are cleared, creating the final 6-bit value.
     ADDA    #$C0
     COMA
@@ -5923,7 +5923,7 @@ handler_ocf_sysex_voice_timeout:                SUBROUTINE
 ;
 ; DESCRIPTION:
 ; Resets the CPU's internal timers.
-; This is called after finishing recieving SysEx data.
+; This is called after finishing receiving SysEx data.
 ;
 ; =============================================================================
 midi_reenable_timer_interrupt:                  SUBROUTINE
@@ -6388,7 +6388,7 @@ tape_output_bit_zero:                           SUBROUTINE
 ; TAPE_OUTPUT_PULSE
 ; =============================================================================
 ; DESCRIPTION:
-; Ouptuts a sinusoidal 'pulse' of a fixed width of 16 'cycles' to the
+; Outputs a sinusoidal 'pulse' of a fixed width of 16 'cycles' to the
 ; synth's tape output port. This subroutine is used when outputting a '1' bit.
 ;
 ; ARGUMENTS:
@@ -6406,7 +6406,7 @@ tape_output_pulse_length_16:                    SUBROUTINE
 ; TAPE_OUTPUT_PULSE
 ; =============================================================================
 ; DESCRIPTION:
-; Ouptuts a sinusoidal 'pulse' of a variable width to the synth's tape output
+; Outputs a sinusoidal 'pulse' of a variable width to the synth's tape output
 ; port. This subroutine will output either a high, or a low pulse, depending
 ; on the input polarity.
 ; Two invocations of this subroutine will create a full sinusoidal period.
@@ -6733,7 +6733,7 @@ tape_input_read_bit_delay:                      SUBROUTINE
 ; LOCATION: 0xDABC
 ;
 ; DESCRIPTION:
-; Triggers a delay for an aribtrary specified period.
+; Triggers a delay for an arbitrary specified period.
 ; This is used in the tape input subroutines.
 ;
 ; ARGUMENTS:
@@ -6935,7 +6935,7 @@ handler_reset_init_peripherals:                 SUBROUTINE
 ;
 ; =============================================================================
 handler_reset_system_init:                      SUBROUTINE
-    CLR     key_tranpose_set_mode_active
+    CLR     key_transpose_set_mode_active
 
 ; Sets the internal patch memory in a protected state.
     LDAA    #1
@@ -7033,7 +7033,7 @@ input_read_front_panel_numeric_switches_exit:
 ;
 ; DESCRIPTION:
 ; This subroutine reads the key/switch scan driver to get the state of the
-; synth's front-panel swith input.
+; synth's front-panel switch input.
 ; This routine will return a value suitable for reading in the UI functions.
 ;
 ; Input line 0 covers the 'main' front-panel switches.
@@ -7710,7 +7710,7 @@ table_max_patch_values:
 ; ARGUMENTS:
 ; Memory:
 ; * patch_index_current: The 0-indexed patch number to get the pointer to.
-;    If this is a negative numnber, a pointer to the initialised patch
+;    If this is a negative number, a pointer to the initialised patch
 ;    buffer will be returned.
 ;
 ; RETURNS:
@@ -7866,7 +7866,7 @@ lcd_print_number_single_digit:                  SUBROUTINE
 ; This subroutine converts one digit of a number to its ASCII equivalent.
 ; This is used as part of the 'lcd_print_number' routines.
 ; The 'divisor' argument passed in ACCB is used to determine which digit of a
-; multipl digit number is returned.
+; multiple digit number is returned.
 ;
 ; ARGUMENTS:
 ; Registers:
@@ -8274,12 +8274,12 @@ ui_patch_compare_toggle:                        SUBROUTINE
 
     LDAA    #BUTTON_EDIT_20
     CMPA    ui_btn_numeric_last_pressed
-    BEQ     .last_button_key_tranpose
+    BEQ     .last_button_key_transpose
 
     LDX     ui_active_param_address
     BRA     .send_active_edit_parameter
 
-.last_button_key_tranpose:
+.last_button_key_transpose:
     LDX     #patch_edit_key_transpose
 
 .send_active_edit_parameter:
@@ -8444,7 +8444,7 @@ ui_button_edit_save_previous:                   SUBROUTINE
     STAA    ui_btn_numeric_previous_play_mode
 
 .clear_key_transpose_mode_state:
-    CLR     key_tranpose_set_mode_active
+    CLR     key_transpose_set_mode_active
     RTS
 
 
@@ -8847,7 +8847,7 @@ ui_button_edit_20_key_transpose:                SUBROUTINE
 
 ; Set the 'Key Transpose' mode as active.
     LDAB    #1
-    STAB    <key_tranpose_set_mode_active
+    STAB    <key_transpose_set_mode_active
 
 .clear_edit_parameter:
 ; Store the address of the 'null' edit parameter in the active edit parameter
@@ -9040,7 +9040,6 @@ ui_button_function_7:                           SUBROUTINE
 ; =============================================================================
 ; DESCRIPTION:
 ; Handles a press to button '19' when the synth is in function mode.
-; Thi
 ;
 ; =============================================================================
 ui_button_function_19:                          SUBROUTINE
@@ -10870,7 +10869,7 @@ table_ui_print_param_functions:
 ; UI_PRINT_PARAM_VALUE_EQUALS_AND_LOAD_VALUE
 ; =============================================================================
 ; DESCRIPTION:
-; Prints an 'equals' to the LCD buffer, and then laods the currently active
+; Prints an 'equals' to the LCD buffer, and then loads the currently active
 ; edit parameter.
 ;
 ; ARGUMENTS:
@@ -10889,7 +10888,7 @@ ui_print_param_value_equals_and_load_value:     SUBROUTINE
 ; UI_PRINT_PARAM_VALUE_SEPARATOR_CHARACTER
 ; =============================================================================
 ; DESCRIPTION:
-; Prints the specified separator charactor to the LCD buffer, and then loads
+; Prints the specified separator character to the LCD buffer, and then loads
 ; the selected edit parameter.
 ;
 ; ARGUMENTS:
@@ -11660,7 +11659,7 @@ tape_output_all:                                SUBROUTINE
 
 ; Read front-panel input to determine the next action.
 ; If 'No' is pressed, the tape UI actions are aborted.
-; If 'Yes' is pressed, the operation proceeeds.
+; If 'Yes' is pressed, the operation proceeds.
 ; If the 'Remote' button is pressed, toggle the remote output polarity,
 ; and loop back to wait for further input.
 .tape_output_all_is_remote_button_pressed:
@@ -11762,7 +11761,7 @@ tape_verify:                                    SUBROUTINE
 
 ; Read front-panel input to determine the next action.
 ; If 'No' is pressed, the tape UI actions are aborted.
-; If 'Yes' is pressed, the operation proceeeds.
+; If 'Yes' is pressed, the operation proceeds.
 ; If the 'Remote' button is pressed, toggle the remote output polarity,
 ; and loop back to wait for further input.
 .tape_verify_is_remote_button_pressed:
@@ -11916,7 +11915,7 @@ tape_input_all:                                 SUBROUTINE
 
 ; Read front-panel input to determine the next action.
 ; If 'No' is pressed, the tape UI actions are aborted.
-; If 'Yes' is pressed, the operation proceeeds.
+; If 'Yes' is pressed, the operation proceeds.
 ; If the 'Remote' button is pressed, toggle the remote output polarity,
 ; and loop back to wait for further input.
 .tape_input_all_is_remote_button_pressed:
@@ -12125,7 +12124,7 @@ tape_input_single:                              SUBROUTINE
 
 ; Read front-panel input to determine the next action.
 ; If 'No' is pressed, the tape UI actions are aborted.
-; If 'Yes' is pressed, the operation proceeeds.
+; If 'Yes' is pressed, the operation proceeds.
 ; If the 'Remote' button is pressed, toggle the remote output polarity,
 ; and loop back to wait for further input.
 .tape_input_single_is_remote_button_pressed:
@@ -12816,7 +12815,7 @@ table_midi_sysex_dx7_translation:
 ; Registers:
 ; * IX:   A pointer to the currently 'selected' parameter being transmitted
 ;         within patch memory.
-; * ACCA: The value of the currently 'selected' parameter being trasmitted.
+; * ACCA: The value of the currently 'selected' parameter being transmitted.
 ;
 ; RETURNS:
 ; * ACCA: The converted algorithm value, if updated.
@@ -13695,7 +13694,7 @@ midi_sysex_rx_param_voice_process:              SUBROUTINE
     JSR     midi_sysex_rx_param_set_alg_key_transpose
 
 ; If the carry bit is set at this point, it indicates an invalid value
-; for the key tranpose, or algorithm settings.
+; for the key transpose, or algorithm settings.
     BCS     .exit
 
 .compare_against_current_value:
@@ -13945,7 +13944,7 @@ midi_sysex_rx_param_function_64_to_78:          SUBROUTINE
 ; SysEx parameter numbers below '42' correspond to DX7 button presses.
 ; The DX9 only acknowledges '0' to '27'.
 ; This subroutine initiates button presses from receiving SysEx function data.
-; Refer to equivalent functionality in DX7 v1.8 firwmare at 0xEEBB.
+; Refer to equivalent functionality in DX7 v1.8 firmware at 0xEEBB.
 ;
 ; ARGUMENTS:
 ; Registers:
@@ -16287,7 +16286,7 @@ str_push_1_button:                      DC "push #1 button", 0
     DC 0, "`MS.2"
 
 ; This is the main hardware vector table.
-; This table contains the various interupt vectors used by the HD6303 CPU. It
+; This table contains the various interrupt vectors used by the HD6303 CPU. It
 ; always sits in a fixed position at the end of the ROM.
     DC.W handler_reset
     DC.W handler_sci
